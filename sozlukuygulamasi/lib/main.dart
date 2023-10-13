@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:sozlukuygulamasi/DetaySayfa.dart';
+import 'package:sozlukuygulamasi/db/dictionaryDao.dart';
 import 'Kelimeler.dart';
 
 void main() {
@@ -33,10 +34,13 @@ class AnaSayfa extends StatefulWidget {
 
 class _AnaSayfaState extends State<AnaSayfa> {
 
-  bool aramaYapiliyorMu = false;
-   String aramaKelimesi = "";
 
-   Future<List<Kelimeler>> tumKelimeler() async{
+   bool isSearching = false;
+   String search = "";
+
+
+
+   /*Future<List<Kelimeler>> tumKelimeler() async{
      var kelimeListesi = <Kelimeler>[];
 
      var k1=Kelimeler(1, "dog", "köpek");
@@ -50,30 +54,30 @@ class _AnaSayfaState extends State<AnaSayfa> {
      return kelimeListesi;
 
    }
-
+*/
 
   @override
   Widget build(BuildContext context) {
 
     return Scaffold(
       appBar: AppBar(
-        title: aramaYapiliyorMu ?
+        title: isSearching ?
         TextField(
           decoration: InputDecoration(hintText: "Kelime girin"),
           onChanged: (aramaSonucu){
           print("Aranan kelime : ${aramaSonucu}");
           setState(() {
-            aramaKelimesi = aramaSonucu;
+            search = aramaSonucu;
             });
           },
         ) :const Text("Sözlük Uygulaması"),
         actions: [
-          aramaYapiliyorMu ?IconButton(
+          isSearching ?IconButton(
             icon: Icon(Icons.cancel),
             onPressed: (){
               setState(() {
-                aramaYapiliyorMu = false;
-                aramaKelimesi = "";
+                isSearching = false;
+                search = "";
               });
             },
           )
@@ -81,7 +85,7 @@ class _AnaSayfaState extends State<AnaSayfa> {
             icon: Icon(Icons.search),
             onPressed: (){
               setState(() {
-                aramaYapiliyorMu = true;
+                isSearching = true;
               });
             },
           )
