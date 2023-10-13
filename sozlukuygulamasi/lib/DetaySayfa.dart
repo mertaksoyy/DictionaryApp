@@ -1,8 +1,12 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:sozlukuygulamasi/Kelimeler.dart';
 
 class DetaySayfa extends StatefulWidget {
-  const DetaySayfa({super.key});
+   DetaySayfa({super.key,required this.kelime});
+
+  Kelimeler kelime;
+
 
   @override
   State<DetaySayfa> createState() => _DetaySayfaState();
@@ -21,12 +25,11 @@ class _DetaySayfaState extends State<DetaySayfa> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
-            Text("data"),
-            Text("data");
-          ],
+            Text(widget.kelime.ingilizce,style: TextStyle(fontWeight: FontWeight.bold,fontSize: 40),),
+            Text(widget.kelime.turkce,style: TextStyle(fontSize: 40,),)
+          ]
         ),
       ),
-
     );
   }
 }
