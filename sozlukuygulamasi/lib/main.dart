@@ -36,25 +36,21 @@ class _AnaSayfaState extends State<AnaSayfa> {
 
 
    bool isSearching = false;
-   String search = "";
+   String searchedWord = "";
+   var words = <Kelimeler>[];
 
 
 
-   /*Future<List<Kelimeler>> tumKelimeler() async{
-     var kelimeListesi = <Kelimeler>[];
-
-     var k1=Kelimeler(1, "dog", "köpek");
-     var k2=Kelimeler(2, "cat", "kedi");
-     var k3=Kelimeler(3, "apple", "elma");
-
-     kelimeListesi.add(k1);
-     kelimeListesi.add(k2);
-     kelimeListesi.add(k3);
-
-     return kelimeListesi;
-
+   Future<List<Kelimeler>> allWords() async{
+     words = await dictionaryDao().allWords();
+     return words;
    }
-*/
+
+
+   Future<List<Kelimeler>> doSearch(String searchedWord) async{
+     words = await dictionaryDao().searchWord(searchedWord);
+     return words;
+   }
 
   @override
   Widget build(BuildContext context) {
@@ -64,20 +60,20 @@ class _AnaSayfaState extends State<AnaSayfa> {
         title: isSearching ?
         TextField(
           decoration: InputDecoration(hintText: "Kelime girin"),
-          onChanged: (aramaSonucu){
-          print("Aranan kelime : ${aramaSonucu}");
+          onChanged: (searchResult){
+          print("Aranan Kelime : ${searchResult}");
           setState(() {
-            search = aramaSonucu;
+            searchedWord = searchResult;
             });
           },
         ) :const Text("Sözlük Uygulaması"),
         actions: [
           isSearching ?IconButton(
-            icon: Icon(Icons.cancel),
+            icon: const Icon(Icons.cancel),
             onPressed: (){
               setState(() {
                 isSearching = false;
-                search = "";
+                searchedWord = "";
               });
             },
           )
@@ -92,19 +88,19 @@ class _AnaSayfaState extends State<AnaSayfa> {
         ],
       ),
       body: FutureBuilder<List<Kelimeler>>(
-        future: tumKelimeler(),
+        future:allWords(),
         builder: (context,snapshot){
           if(snapshot.hasData){
-            var gelenKelimeler = snapshot.data;
+            var incomingWords = snapshot.data;
             
            return ListView.builder(
-              itemCount: gelenKelimeler!.length,
+              itemCount: incomingWords!.length,
               itemBuilder: (context,indeks){
-                var kelime = gelenKelimeler[indeks];
+                var word = incomingWords[indeks];
 
                 return GestureDetector(
                   onTap: (){
-                    Navigator.push(context, MaterialPageRoute(builder: (context) => DetaySayfa(kelime: kelime,)));
+                    Navigator.push(context, MaterialPageRoute(builder: (context) => DetaySayfa(kelime: word,)));
                   },
                   child: SizedBox(
                     height: 50,
@@ -112,8 +108,8 @@ class _AnaSayfaState extends State<AnaSayfa> {
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: [
-                          Text(kelime.ingilizce,style: TextStyle(fontWeight: FontWeight.bold),),
-                          Text(kelime.turkce),
+                          Text(word.ingilizce,style: TextStyle(fontWeight: FontWeight.bold),),
+                          Text(word.turkce),
                         ],
                       ),
                     ),
@@ -121,7 +117,6 @@ class _AnaSayfaState extends State<AnaSayfa> {
                 );
               },
             );
-          
           }
           else{
             return Center();
