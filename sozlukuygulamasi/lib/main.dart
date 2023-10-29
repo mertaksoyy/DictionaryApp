@@ -33,24 +33,21 @@ class AnaSayfa extends StatefulWidget {
 }
 
 class _AnaSayfaState extends State<AnaSayfa> {
-
-
    bool isSearching = false;
    String searchedWord = "";
-   var words = <Kelimeler>[];
-
-
 
    Future<List<Kelimeler>> allWords() async{
-     words = await dictionaryDao().allWords();
+     var words = await dictionaryDao().allWords();
      return words;
    }
-
 
    Future<List<Kelimeler>> doSearch(String searchedWord) async{
-     words = await dictionaryDao().searchWord(searchedWord);
+    var words = await dictionaryDao().searchWord(searchedWord);
      return words;
+
    }
+
+
 
   @override
   Widget build(BuildContext context) {
